@@ -73,21 +73,33 @@ const render = () => {
 
         const canvas_x = range(video_x, 0, video.width, 0, canvas.width)   + 3
         const canvas_y = range(video_y, 0, video.height, 0, canvas.height) + 3
+
+        let fontSize = range(canvas.width, 300, 800, 10, 20)
         
-        ctx.font = "12px monospace"
+        ctx.font = `${fontSize}px Roboto Mono`
         ctx.fillStyle = "white"
         ctx.textAlign = "center"
         ctx.fillText(ascii_chars[index], canvas_x, canvas_y )
     }
 
-    play && setTimeout(render, 50)
-    // play && requestAnimationFrame(render)
+    // play && setTimeout(render, 50)
+    play && requestAnimationFrame(render)
 }
 
 const handlePause = event => {
-    if (event.keyCode === 32 && event.code === 'Space') play = !play
-    if( play ) render()
+    if (event.type === "dblclick" || (event.keyCode === 32 && event.code === 'Space')) {
+        play = !play
+        if( play ) render()
+    }
+}
+
+const handleResize = () => {
+    canvas.width  = document.getElementById('canvas').clientWidth
+    canvas.height = document.getElementById('canvas').clientHeight
 }
 
 document.addEventListener("keypress", handlePause)
+document.addEventListener("dblclick", handlePause)
+window.addEventListener("resize", handleResize)
+
 document.addEventListener("DOMContentLoaded", init)
