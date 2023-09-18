@@ -29,6 +29,7 @@ body {
     position: absolute;
     top: 0;
 
+    /* display: none; */
     visibility: hidden;
     object-fit: cover;
 }
