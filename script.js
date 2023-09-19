@@ -10,13 +10,13 @@ const canvas_tmp = document.createElement('canvas')
 const ctx_tmp = canvas_tmp.getContext('2d')
 
 let FONT_SIZE = 10
+const vRatio = (canvas.height / video.height) * video.width;
 
 const luminanceValue = rgb => {
     return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2] 
 }
 
 const init = () => {    
-    document.body.style.height = `${window.innerHeight}px`
     handleResize()
 
     if ( navigator.mediaDevices.getUserMedia ){
@@ -35,14 +35,10 @@ const range = (value, oldmin, oldmax, newmin, newmax) => {
 const render = () => {
     if (video.paused || video.ended) return
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx_tmp.drawImage(video, 0, 0, video.height, video.height )
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx_tmp.drawImage(video, -video.width/2, 0, vRatio, video.height )
 
     const frames = ctx_tmp.getImageData(0, 0, video.height, video.height )
-
-    ctx.font = `${FONT_SIZE}px Roboto Mono`
-    ctx.fillStyle = "white"
-    ctx.textAlign = "center"
 
     for (let i = 0; i < frames.data.length /4; i++) {
 
@@ -56,9 +52,16 @@ const render = () => {
         const video_x = i % video.width
         const video_y = Math.floor(i / video.width)
 
-        const canvas_x = FONT_SIZE/2 + (video_x * canvas.width) / video.width // range(video_x, 0, video.width, 0, canvas.width)   
-        const canvas_y = FONT_SIZE + (video_y * canvas.height) / video.height // range(video_y, 0, video.height, 0, canvas.height)         console.log(canvas_x, canvas_y);
+        // const canvas_x = FONT_SIZE/2 + range(video_x, 0, video.width, 0, canvas.width)  //FONT_SIZE/2 + (video_x * canvas.width) / video.width 
+        // const canvas_y = FONT_SIZE + range(video_y, 0, video.height, 0, canvas.height)  //FONT_SIZE + (video_y * canvas.height) / video.height 
         
+        const canvas_x = FONT_SIZE/2 + (video_x * canvas.width) / video.width 
+        const canvas_y = FONT_SIZE + (video_y * canvas.height) / video.height 
+
+        ctx.font = `${FONT_SIZE}px Roboto Mono`
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+        ctx.textAlign = "center"
+
         ctx.fillText(ascii_chars.charAt(index), canvas_x, canvas_y )
     }
 
@@ -76,7 +79,8 @@ const handleResize = () => {
     canvas.width  = document.getElementById('canvas').clientWidth
     canvas.height = document.getElementById('canvas').clientHeight
 
-    FONT_SIZE = range(canvas.width, 300, 800, 10, 15)
+    const { fontSize } = window.getComputedStyle(document.getElementById('measurements'))
+    FONT_SIZE = parseInt(fontSize) 
 }
 
 document.addEventListener("keypress", handlePause)

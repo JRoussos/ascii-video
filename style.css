@@ -11,6 +11,8 @@ body {
     justify-content: center;
     flex-direction: column;
 
+    height: 100dvh;
+
     background-color: #111;
 }
 
@@ -29,9 +31,19 @@ body {
     position: absolute;
     top: 0;
 
-    /* display: none; */
+    width: 50;
+    height: 50;
+
     visibility: hidden;
     object-fit: cover;
+}
+
+#measurements {
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+
+    font-size: clamp(5px, 2.222vw, 15px);
 }
 
 #canvas {
