@@ -10,6 +10,7 @@ const canvas_tmp = document.createElement('canvas')
 const ctx_tmp = canvas_tmp.getContext('2d')
 
 let FONT_SIZE = 10
+const vRatio = (canvas.width / video.width) * video.height;
 
 const luminanceValue = rgb => {
     return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2] 
@@ -35,9 +36,9 @@ const render = () => {
     if (video.paused || video.ended) return
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx_tmp.drawImage(video, 0, 0, video.width, video.height )
+    ctx_tmp.drawImage(video, 0, 0, video.width, vRatio )
 
-    const frames = ctx_tmp.getImageData(0, 0, video.height, video.height )
+    const frames = ctx_tmp.getImageData(0, video.height/2, video.height, video.height )
 
     for (let i = 0; i < frames.data.length /4; i++) {
 
